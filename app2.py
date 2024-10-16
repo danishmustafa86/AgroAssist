@@ -1,4 +1,3 @@
-# Step 1: Import required libraries
 import os
 import streamlit as st
 import requests
@@ -7,21 +6,22 @@ from PIL import Image
 import io
 import base64  # Import base64 to encode the image
 
-# Initialize OpenAI client
-client = OpenAI(
-    api_key="",
-    base_url="https://api.aimlapi.com",
-)
+# Access API keys and base URL from Streamlit secrets
+openai_api_key = st.secrets["openai"]["api_key"]
+openai_base_url = st.secrets["openai"]["base_url"]
+weather_api_key = st.secrets["weather"]["api_key"]
 
-# Step 2: Set up Streamlit interface
+# Initialize OpenAI client with secret credentials
+client = OpenAI(api_key=openai_api_key, base_url=openai_base_url)
+
+# Set up Streamlit interface
 st.set_page_config(page_title="AgroAssist", layout="wide")
 st.title("AgroAssist: Your Smart Farming Assistant")
 st.sidebar.title("Menu")
 
 # Weather Forecast Feature
 def get_weather_data(location):
-    api_key = ''  # Replace with your OpenWeather API key
-    url = f"http://api.openweathermap.org/data/2.5/forecast?q={location}&appid={api_key}&units=metric"
+    url = f"http://api.openweathermap.org/data/2.5/forecast?q={location}&appid={weather_api_key}&units=metric"
     response = requests.get(url)
 
     if response.status_code != 200:
@@ -43,48 +43,6 @@ if location:
             st.error(f"Error: {weather_data['message']}")
         else:
             st.error("Error fetching weather data. Please check the location or API key.")
-
-# Crop Disease Detection Feature
-# st.sidebar.subheader("Crop Disease Detection")
-# uploaded_file = st.sidebar.file_uploader("Upload an image of your crop", type=['jpg', 'jpeg', 'png'])
-
-# # Prepare to send the uploaded file to the AIML API for disease detection
-# if uploaded_file is not None:
-#     image = Image.open(uploaded_file)
-#     st.image(image, caption="Uploaded Crop Image", use_column_width=True)
-
-#     # Convert the uploaded file to bytes and then encode it to base64
-#     file_bytes = io.BytesIO()
-#     image.save(file_bytes, format='PNG')
-#     file_bytes.seek(0)
-    
-#     # Encode the image as base64
-#     encoded_image = base64.b64encode(file_bytes.read()).decode('utf-8')
-
-    # Call the Llama model for analysis
-    # response = client.chat.completions.create(
-    #     model="o1-mini",
-    #     messages=[{
-    #         "role": "user",
-    #         "content": [
-    #             {
-    #                 "type": "text",
-    #                 "text": "What disease is affecting this crop and how to treat it?"
-    #             },
-    #             {
-    #                 "type": "image_url",
-    #                 "image_url": {
-    #                     "url": f"data:image/png;base64,{encoded_image}",
-    #                 },
-    #             },
-    #         ],
-    #     }],
-    #     max_tokens=100,
-    # )
-
-    # message = response.choices[0].message.content
-    # st.subheader("Analysis Result")
-    # st.write(message)
 
 # Crop Recommendation System
 st.sidebar.subheader("Crop Recommendation")
