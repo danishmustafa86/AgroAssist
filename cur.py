@@ -1,0 +1,180 @@
+# Step 1: Import required libraries
+import os
+import streamlit as st
+import requests
+from openai import OpenAI
+from PIL import Image
+import io
+import base64  # Import base64 to encode the image
+
+# Initialize OpenAI client
+client = OpenAI(
+    api_key="99a56428030245fab37f5ce8e97d3736",
+    base_url="https://api.aimlapi.com",
+)
+
+# Step 2: Set up Streamlit interface
+st.set_page_config(page_title="AgroAssist", layout="wide")
+st.title("AgroAssist: Your Smart Farming Assistant")
+st.sidebar.title("Menu")
+
+# Weather Forecast Feature
+def get_weather_data(location):
+    api_key = '5c132ab3a830271eab37479d538c61c9'  # Replace with your OpenWeather API key
+    url = f"http://api.openweathermap.org/data/2.5/forecast?q={location}&appid={api_key}&units=metric"
+    response = requests.get(url)
+
+    if response.status_code != 200:
+        return {'message': response.json().get('message', 'Unknown error occurred')}
+    
+    return response.json()
+
+# Sidebar for weather forecast input
+st.sidebar.subheader("Weather Forecast")
+location = st.sidebar.text_input("Enter your location", placeholder="e.g., City, State")
+if location:
+    weather_data = get_weather_data(location)
+    if 'list' in weather_data:
+        st.subheader(f"Weather in {location}")
+        for forecast in weather_data['list'][:5]:  # Show next 5 forecasts
+            st.write(f"{forecast['dt_txt']} - {forecast['main']['temp']}°C, {forecast['weather'][0]['description']}")
+    else:
+        if 'message' in weather_data:
+            st.error(f"Error: {weather_data['message']}")
+        else:
+            st.error("Error fetching weather data. Please check the location or API key.")
+
+# Crop Disease Detection Feature
+st.sidebar.subheader("Crop Disease Detection")
+uploaded_file = st.sidebar.file_uploader("Upload an image of your crop", type=['jpg', 'jpeg', 'png'])
+
+# Prepare to send the uploaded file to the AIML API for disease detection
+if uploaded_file is not None:
+    image = Image.open(uploaded_file)
+    st.image(image, caption="Uploaded Crop Image", use_column_width=True)
+
+    # Convert the uploaded file to bytes and then encode it to base64
+    file_bytes = io.BytesIO()
+    image.save(file_bytes, format='PNG')
+    file_bytes.seek(0)
+    
+    # Encode the image as base64
+    encoded_image = base64.b64encode(file_bytes.read()).decode('utf-8')
+
+    # Call the Llama model for analysis
+    response = client.chat.completions.create(
+        model="meta-llama/Llama-3.2-11B-Vision-Instruct-Turbo",
+        messages=[
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "What sort of animal is in this picture? What is its usual diet? What area is the animal native to? And isn’t there some AI model that’s related to the image?"
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": f"data:image/png;base64,{encoded_image}",
+                        },
+                    },
+                ],
+            }
+        ],
+        max_tokens=100,
+    )
+
+    message = response.choices[0].message.content
+    st.subheader("Analysis Result")
+    st.write(message)
+
+
+
+# Crop Recommendation System
+# Crop Recommendation System
+st.sidebar.subheader("Crop Recommendation")
+
+# Allow the user to input any place over the world
+region = st.sidebar.text_input("Enter your region or location", placeholder="e.g., City, Country")
+
+# Select soil type remains as a dropdown menu
+soil_type = st.sidebar.selectbox("Select soil type", ["Clay", "Sandy", "Loamy"])
+
+# Get Recommendations based on user input
+if st.sidebar.button("Get Recommendations"):
+    # Make an API call to provide crop recommendations based on input region and soil type
+    response = client.chat.completions.create(
+        model="o1-mini",
+        messages=[{
+            "role": "user", 
+            "content": f"Provide crop recommendations for the location {region} with soil type {soil_type}."
+        }],
+        max_tokens=100,
+    )
+
+    message = response.choices[0].message.content
+    st.subheader(f"Recommended Crops for {region}")
+    st.write(message)
+
+
+# Spraying Advisory System
+st.sidebar.subheader("Spraying Advisory")
+crop = st.sidebar.text_input("Enter your crop type", placeholder="e.g., Wheat, Rice")
+if crop:
+    response = client.chat.completions.create(
+        model="o1-mini",
+        messages=[{"role": "user", "content": f"What is the spraying schedule for {crop}?"}],
+        max_tokens=100,
+    )
+
+    message = response.choices[0].message.content
+    st.subheader(f"Spraying Advisory for {crop}")
+    st.write(message)
+
+# Multilingual Chatbot
+st.sidebar.subheader("Chat with AgroBot")
+user_input = st.sidebar.text_input("Ask your question (e.g., crop advice, disease prevention)", placeholder="Type your question here...")
+if user_input:
+    response = client.chat.completions.create(
+        model="o1-mini",
+        messages=[{"role": "user", "content": user_input}],
+        max_tokens=100,
+    )
+
+    message = response.choices[0].message.content
+    st.subheader("AgroBot Response")
+    st.write(message)
+
+# Soil Health Monitoring Feature
+
+
+st.sidebar.subheader("Soil Health Monitoring")
+
+# Add more parameters for soil health analysis
+ph_level = st.sidebar.slider("Select soil pH level", 0.0, 14.0, 7.0)
+moisture = st.sidebar.slider("Select soil moisture level (%)", 0, 100, 50)
+temperature = st.sidebar.slider("Select soil temperature (°C)", -10, 50, 20)
+nitrogen = st.sidebar.slider("Select Nitrogen (N) level (ppm)", 0, 100, 30)
+phosphorus = st.sidebar.slider("Select Phosphorus (P) level (ppm)", 0, 100, 20)
+potassium = st.sidebar.slider("Select Potassium (K) level (ppm)", 0, 100, 40)
+organic_matter = st.sidebar.slider("Select organic matter (%)", 0, 10, 5)
+compaction = st.sidebar.slider("Select soil compaction level (g/cm³)", 1.0, 2.5, 1.4)
+
+# Trigger the check when the button is clicked
+if st.sidebar.button("Check Soil Health"):
+    # Make an API call to assess soil health based on multiple factors
+    response = client.chat.completions.create(
+        model="o1-mini",
+        messages=[{
+            "role": "user", 
+            "content": f"Assess soil health with pH level {ph_level}, moisture {moisture}%, temperature {temperature}°C, Nitrogen (N) {nitrogen} ppm, Phosphorus (P) {phosphorus} ppm, Potassium (K) {potassium} ppm, organic matter {organic_matter}%, and compaction {compaction} g/cm³."
+        }],
+        max_tokens=150,
+    )
+
+    # Display the AI-generated soil health report
+    message = response.choices[0].message.content
+    st.subheader("Soil Health Report")
+    st.write(message)
+
+
