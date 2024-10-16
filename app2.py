@@ -9,7 +9,7 @@ import base64  # Import base64 to encode the image
 
 # Initialize OpenAI client
 client = OpenAI(
-    api_key="38281a3c354e410d92d13d93adae311b",
+    api_key="",
     base_url="https://api.aimlapi.com",
 )
 
@@ -20,7 +20,7 @@ st.sidebar.title("Menu")
 
 # Weather Forecast Feature
 def get_weather_data(location):
-    api_key = '5c132ab3a830271eab37479d538c61c9'  # Replace with your OpenWeather API key
+    api_key = ''  # Replace with your OpenWeather API key
     url = f"http://api.openweathermap.org/data/2.5/forecast?q={location}&appid={api_key}&units=metric"
     response = requests.get(url)
 
