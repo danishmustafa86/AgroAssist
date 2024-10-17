@@ -41,7 +41,7 @@ translations = {
         "soil_health_monitoring": "Soil Health Monitoring",
         "check_soil_health": "Check Soil Health",
         "agro_assist": "AgroAssist: Your Smart Farming Assistant",
-        "feedback": "We Value Your Feedback!",
+        "Give_Feedback": "We Value Your Feedback!",
         "follow_us": "Follow Us",
         "help_faqs": "Help & FAQs",
         "learn_more": "Learn More About Smart Farming",
@@ -55,7 +55,7 @@ translations = {
         "soil_health_monitoring": "Monitoreo de Salud del Suelo",
         "check_soil_health": "Verificar Salud del Suelo",
         "agro_assist": "AgroAssist: Tu Asistente Agrícola Inteligente",
-        "feedback": "¡Valoramos Tu Opinión!",
+        "Give_Feedback": "¡Valoramos Tu Opinión!",
         "follow_us": "Síguenos",
         "help_faqs": "Ayuda y Preguntas Frecuentes",
         "learn_more": "Aprende Más Sobre Agricultura Inteligente",
@@ -69,7 +69,7 @@ translations = {
         "soil_health_monitoring": "Surveillance de la Santé du Sol",
         "check_soil_health": "Vérifier la Santé du Sol",
         "agro_assist": "AgroAssist: Votre Assistant Agricole Intelligent",
-        "feedback": "Nous Valorisons Vos Retours!",
+        "Give_Feedback": "Nous Valorisons Vos Retours!",
         "follow_us": "Suivez-nous",
         "help_faqs": "Aide & FAQ",
         "learn_more": "En Savoir Plus Sur l'Agriculture Intelligente",
@@ -83,7 +83,7 @@ translations = {
         "soil_health_monitoring": "زمین کی صحت کی نگرانی",
         "check_soil_health": "زمین کی صحت چیک کریں",
         "agro_assist": "ایگرو اسسٹ: آپ کا ذہین زرعی معاون",
-        "feedback": "ہم آپ کی رائے کی قدر کرتے ہیں!",
+        "Give_Feedback": "ہم آپ کی رائے کی قدر کرتے ہیں!",
         "follow_us": "ہمارا ساتھ دیں",
         "help_faqs": "مدد اور اکثر پوچھے جانے والے سوالات",
         "learn_more": "ذہین زراعت کے بارے میں مزید جانیں",
@@ -97,7 +97,7 @@ translations = {
         "soil_health_monitoring": "Boden Gesundheitsüberwachung",
         "check_soil_health": "Boden Gesundheit überprüfen",
         "agro_assist": "AgroAssist: Ihr intelligenter Landwirtschaftsassistent",
-        "feedback": "Wir schätzen Ihr Feedback!",
+        "Give_Feedback": "Wir schätzen Ihr Feedback!",
         "follow_us": "Folgen Sie uns",
         "help_faqs": "Hilfe & FAQs",
         "learn_more": "Erfahren Sie mehr über intelligente Landwirtschaft",
@@ -111,7 +111,7 @@ translations = {
         "soil_health_monitoring": "土壤健康监测",
         "check_soil_health": "检查土壤健康",
         "agro_assist": "AgroAssist：您的智能农业助手",
-        "feedback": "我们重视您的反馈!",
+        "Give_Feedback": "我们重视您的反馈!",
         "follow_us": "关注我们",
         "help_faqs": "帮助与常见问题",
         "learn_more": "了解更多关于智能农业的信息",
@@ -125,7 +125,7 @@ translations = {
         "soil_health_monitoring": "مراقبة صحة التربة",
         "check_soil_health": "تحقق من صحة التربة",
         "agro_assist": "AgroAssist: مساعدك الزراعي الذكي",
-        "feedback": "نحن نقدر ملاحظاتك!",
+        "Give_Feedback": "نحن نقدر ملاحظاتك!",
         "follow_us": "تابعنا",
         "help_faqs": "المساعدة والأسئلة الشائعة",
         "learn_more": "تعلم المزيد عن الزراعة الذكية",
@@ -139,7 +139,7 @@ translations = {
         "soil_health_monitoring": "Мониторинг здоровья почвы",
         "check_soil_health": "Проверить здоровье почвы",
         "agro_assist": "AgroAssist: Ваш умный сельскохозяйственный помощник",
-        "feedback": "Мы ценим ваш отзыв!",
+        "Give_Feedback": "Мы ценим ваш отзыв!",
         "follow_us": "Следите за нами",
         "help_faqs": "Помощь и часто задаваемые вопросы",
         "learn_more": "Узнайте больше о смарт-фермерстве",
@@ -192,7 +192,7 @@ if st.sidebar.button("Get Recommendations"):
             "role": "user", 
             "content": f"Provide crop recommendations for the location {region} with soil type {soil_type}."
         }],
-        max_tokens=90,
+        max_tokens=100,
     )
 
     message = response.choices[0].message.content
@@ -249,7 +249,7 @@ if st.sidebar.button(selected_lang["check_soil_health"]):
             "role": "user", 
             "content": f"Assess soil health with pH level {ph_level}, moisture {moisture}%, temperature {temperature}°C, Nitrogen (N) {nitrogen} ppm, Phosphorus (P) {phosphorus} ppm, Potassium (K) {potassium} ppm, organic matter {organic_matter}%, and compaction {compaction} g/cm³."
         }],
-        max_tokens=150,
+        max_tokens=100,
     )
 
     message = response.choices[0].message.content
@@ -258,10 +258,20 @@ if st.sidebar.button(selected_lang["check_soil_health"]):
 
 
 # Follow us and Help & FAQs Section
+# Follow Us Section
 st.sidebar.subheader(selected_lang["follow_us"])
-st.sidebar.markdown("[Follow us on Twitter](https://twitter.com/AgroAssist)")
-st.sidebar.markdown("[Follow us on Facebook](https://facebook.com/AgroAssist)")
-st.sidebar.subheader(selected_lang["help_faqs"])
-st.sidebar.markdown("[Help & FAQs](#)")
+st.sidebar.markdown("[Twitter](https://twitter.com/AgroAssist)")
+st.sidebar.markdown("[Linkedin](https://www.linkedin.com/in/danishmustafa86/)")
+st.sidebar.markdown("[Facebook](https://facebook.com/AgroAssist)")
+
+# # Help & FAQs Section
+# st.sidebar.subheader(selected_lang["help_faqs"])
+# st.sidebar.markdown("[Help & FAQs](#)")
+
+# Learn More Section
 st.sidebar.subheader(selected_lang["learn_more"])
-st.sidebar.markdown("[Learn More About Smart Farming](#)")
+st.sidebar.markdown("[https://www.cropin.com/smart-farming](#)")
+
+# Give Feedback Section
+st.sidebar.subheader(selected_lang["Give_Feedback"])
+st.sidebar.markdown("[Provide Feedback](https://docs.google.com/forms/d/1VXQ1dd6p_SFwjuWkTcqtZ1-A5O1M-FdyktcwTYXX5ig/edit?usp=forms_home&ths=true)")

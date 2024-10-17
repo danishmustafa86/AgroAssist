@@ -10,7 +10,7 @@ st.sidebar.title("Menu")
 
 # Weather Forecast Feature
 def get_weather_data(location):
-    api_key = '5c132ab3a830271eab37479d538c61c9'  # Replace with your OpenWeather API key
+    api_key = ''  # Replace with your OpenWeather API key
     url = f"http://api.openweathermap.org/data/2.5/forecast?q={location}&appid={api_key}&units=metric"
     response = requests.get(url).json()
     return response
@@ -43,7 +43,7 @@ if uploaded_file is not None:
     # Send to AIML API (assuming AIML API for disease detection)
     disease_url = "https://api.aimlapi.com/disease_detection"
     files = {'file': uploaded_file}
-    headers = {'Authorization': '547499bfcaa847d086e36054ffc2bcfa'}  # Replace with your AIML API key
+    headers = {'Authorization': ''}  # Replace with your AIML API key
     response = requests.post(disease_url, files=files, headers=headers).json()
 
     st.subheader("Disease Detection Result")
